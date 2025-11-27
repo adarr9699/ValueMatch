@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 
 
+
 }
 
 android {
@@ -54,11 +55,12 @@ dependencies {
 
 
     //implementation("com.google.firebase:firebase-auth-ktx")
-   // implementation("com.google.firebase:firebase-firestore-ktx")
-   // implementation("com.google.firebase:firebase-storage-ktx")
+   //implementation("com.google.firebase:firebase-firestore-ktx")
+    //implementation("com.google.firebase:firebase-storage-ktx")
    // implementation("com.google.firebase:firebase-messaging-ktx")
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation(libs.androidx.appcompat)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
