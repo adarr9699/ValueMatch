@@ -8,29 +8,29 @@ Value Match is was made to promotes meaningful connections, improves relationshi
 💚 MVP Features:
 
 Users Authentication:
- - Sign up & long in using Firebase Authorization
- - Secure email & password system
- - Add name, age, bio
- - Select core values
+ - Sign up & Longin using Firebase Authorization
+ - Secure Email & Password System
+ - Add Name, Age, Bio
+ - Select Core Values
  - Choose interest and personality traits
  - Save profile to Firestore
 
 Matching System 
- - Compare users profile based on matching logic
- - Generate compatibility scores
- - Display fit- match
+ - Compare Users Profile Based on Matching logic
+ - Generate Compatibility scores
+ - Display Match
 
 Navigation 
   - Login
   - Signup
-  - Home dashboard
-  - Profile screen
-  - Match screen
-  - Messaging screen
+  - Home Dashboard
+  - Profile Screen
+  - Match Screen
+  - Messaging Screen
 
 💚 Technologies:
 
-Frontend
+ Frontend
  - Kotlin
  - Jetpack Compose
  - Material 3
@@ -44,7 +44,29 @@ Backend
 
 Build 
  - Gradle
- - Android Studio 
+ - Android Studio
+
+💚 Installation :  
+
+Requirements:
+ - Android 8.0+
+ - Internet Connection
+
+💚 Contributors:
+
+  - Amy Darr
+
+💚 Project Status :
+
+ Stage: Pre-Alpha 
+  - Working on the Authentication, Profies, Value Matching, Navigation
+ 
+ Next Steps:
+  - Chat messaging
+  - Profile Photos
+  - Compatibility Engineering 
+ 
+   
 
 
  
