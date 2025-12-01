@@ -64,7 +64,7 @@ Requirements:
  Next Steps:
   - Chat messaging
   - Profile Photos
-  - Compatibility Engineering 
+  - Compatibility Engineering (logic)
  
    
 
