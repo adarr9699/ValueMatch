@@ -1,20 +1,27 @@
 package com.example.valuematch.repository
 
-import com.example.valuematch.utils.FirebaseUtils
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.tasks.await
 
-class AuthRepository {
+class AuthRepository(
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+) {
 
-    private val auth = FirebaseUtils.auth
-
-    fun login(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener { onResult(true, null) }
-            .addOnFailureListener { onResult(false, it.message) }
+    suspend fun login(email: String, password: String): Result<Unit> {
+        return try {
+            auth.signInWithEmailAndPassword(email, password).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
-    fun signup(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener { onResult(true, null) }
-            .addOnFailureListener { onResult(false, it.message) }
+    suspend fun signup(email: String, password: String): Result<Unit> {
+        return try {
+            auth.createUserWithEmailAndPassword(email, password).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

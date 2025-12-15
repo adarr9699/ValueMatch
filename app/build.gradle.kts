@@ -43,6 +43,7 @@ android {
     }
 
     buildFeatures {
+        viewBinding = true
         compose = true
     }
 }
@@ -59,8 +60,11 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
 
-    // Navigation Compose (correct version)
-    implementation("androidx.navigation:navigation-compose:2.7.0")
+
+    // Navigation for Fragments
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.0")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.0")
+
 
     // Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
