@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Value Match</string>
+    <string name="matches_will_appear_here">Matches will appear here</string>
 </resources>

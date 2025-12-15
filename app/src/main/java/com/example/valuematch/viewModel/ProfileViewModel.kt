@@ -1,18 +1,22 @@
-package com.example.valuematch.viewModel
+package com.example.valuematch.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.valuematch.models.UserProfile
-import com.example.valuematch.respository.ProfileRepository
-import kotlinx.coroutines.launch
 
 class ProfileViewModel : ViewModel() {
 
-    private val repo = ProfileRepository()
+    private val _userProfile = MutableLiveData<UserProfile>()
+    val userProfile: LiveData<UserProfile> = _userProfile
 
-    fun saveProfile(profile: UserProfile) {
-        viewModelScope.launch {
-            repo.saveProfile(profile)
-        }
+    fun loadProfile() {
+        // this is a temp mock data (replace with Firebase later)
+        _userProfile.value = UserProfile(
+            name = "Test User",
+            age = 21,
+            about = "This is a sample bio"
+        )
     }
 }
+

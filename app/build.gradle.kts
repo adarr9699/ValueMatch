@@ -75,6 +75,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation(libs.androidx.navigation.compose)
 
     // Tests
     testImplementation(libs.junit)

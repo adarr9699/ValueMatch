@@ -7,6 +7,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.navigation.compose.rememberNavController
 import com.example.valuematch.navigation.AppNavHost
 
+private val compose: Any
+    get() {
+        TODO()
+    }
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.valuematch.databinding.FragmentProfileBinding
-import com.example.valuematch.viewmodel.ProfileViewModel
+import com.example.valuematch.databinding.FragmentProfileSetupBinding
+import com.example.valuematch.viewModel.ProfileViewModel
 
 class ProfileFragment : Fragment() {
 
-    private var _binding: FragmentProfileBinding? = null
+    private var _binding: FragmentProfileSetupBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: ProfileViewModel by viewModels()
@@ -21,7 +21,7 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileSetupBinding.inflate(inflater, container, false)
         return binding.root
     }
 

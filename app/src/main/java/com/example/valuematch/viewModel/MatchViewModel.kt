@@ -1,27 +1,21 @@
-package com.example.valuematch.viewModel
+package com.example.valuematch.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.valuematch.models.UserProfile
-import com.example.valuematch.respository.MatchRepository
-import com.example.valuematch.respository.ProfileRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import com.example.valuematch.models.MatchResult
 
 class MatchViewModel : ViewModel() {
 
-    private val profileRepo = ProfileRepository()
-    private val matchRepo = MatchRepository()
+    private val _bestMatches = MutableLiveData<List<MatchResult>>()
+    val bestMatches: LiveData<List<MatchResult>> = _bestMatches
 
-    private val _matches = MutableStateFlow(emptyList<UserProfile>())
-    val matches: StateFlow<List<UserProfile>> = _matches
-
-    fun loadMatches(currentUser: UserProfile) {
-        viewModelScope.launch {
-            val all = profileRepo.getAllProfiles()
-            val results = matchRepo.getMatches(currentUser, all)
-            _matches.value = results.map { UserProfile(uid = it.userId) }
-        }
+    fun loadMatches() {
+        // TEMP mock data (replace with real matching logic)
+        _bestMatches.value = listOf(
+            MatchResult("Alex", 85),
+            MatchResult("Jordan", 78),
+            MatchResult("Taylor", 72)
+        )
     }
 }

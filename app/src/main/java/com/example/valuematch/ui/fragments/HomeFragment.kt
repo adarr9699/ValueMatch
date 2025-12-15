@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.valuematch.R
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.valuematch.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
