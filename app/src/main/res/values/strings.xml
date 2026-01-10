@@ -1,4 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Value Match</string>
-    <string name="matches_will_appear_here">Matches will appear here</string>
+    <string name="app_name">ValueMatch</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="login">Login</string>
+    <string name="signup">Sign Up</string>
+    <string name="go_to_signup">Don’t have an account? Sign up</string>
+    <string name="go_to_login">Already have an account? Login</string>
+    <string name="signup_status">Creating account…</string>
+    <string name="welcome_title">Welcome to Value Match</string>
+    <string name="profile_button">My Profile</string>
+    <string name="matches_button">Find Matches</string>
+    <string name="logout">Log Out</string>
+    <string name="matches_title">Best Matches</string>
+    <string name="no_matches">No matches yet</string>
 </resources>

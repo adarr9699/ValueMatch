@@ -11,12 +11,12 @@ class ProfileViewModel : ViewModel() {
     val userProfile: LiveData<UserProfile> = _userProfile
 
     fun loadProfile() {
-        // this is a temp mock data (replace with Firebase later)
+
         _userProfile.value = UserProfile(
-            name = "Test User",
-            age = 21,
-            about = "This is a sample bio"
+            name = "Test User"
         )
     }
 }
+
+
 

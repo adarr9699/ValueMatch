@@ -11,11 +11,10 @@ class MatchViewModel : ViewModel() {
     val bestMatches: LiveData<List<MatchResult>> = _bestMatches
 
     fun loadMatches() {
-        // TEMP mock data (replace with real matching logic)
+
         _bestMatches.value = listOf(
-            MatchResult("Alex", 85),
-            MatchResult("Jordan", 78),
-            MatchResult("Taylor", 72)
+            MatchResult("user123", 85, listOf("Honesty", "Family")),
+            MatchResult("user456", 72, listOf("Growth"))
         )
     }
 }

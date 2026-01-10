@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
 
     <TextView
-        android:id="@+id/welcomeText"
-        android:text="Welcome to Value Match!"
-        android:textSize="22sp"
+        android:text="Welcome to Value Match"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/goToMatchesBtn"
+        android:id="@+id/profileBtn"
+        android:text="My Profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/matchesBtn"
         android:text="Find Matches"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginTop="12dp" />
 
     <Button
-        android:id="@+id/goToProfileBtn"
-        android:text="Edit Profile"
+        android:id="@+id/logoutBtn"
+        android:text="Log Out"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp" />
 
 </LinearLayout>

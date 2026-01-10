@@ -1,25 +1,12 @@
 package com.example.valuematch
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
-import androidx.navigation.compose.rememberNavController
-import com.example.valuematch.navigation.AppNavHost
+import androidx.appcompat.app.AppCompatActivity
 
-private val compose: Any
-    get() {
-        TODO()
-    }
+class MainActivity : AppCompatActivity() {
 
-class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                val navController = rememberNavController()
-                AppNavHost(navController = navController)
-            }
-        }
+        setContentView(R.layout.activity_main)
     }
 }

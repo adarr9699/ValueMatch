@@ -7,15 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.valuematch.databinding.FragmentMatchBinding
-
 import com.example.valuematch.viewmodel.MatchViewModel
 
 class MatchFragment : Fragment() {
 
     private var _binding: FragmentMatchBinding? = null
-
-    annotation class FragmentMatchBinding
-
     private val binding get() = _binding!!
 
     private val viewModel: MatchViewModel by viewModels()
@@ -32,11 +28,13 @@ class MatchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         viewModel.bestMatches.observe(viewLifecycleOwner) { matches ->
             binding.resultsText.text = matches.joinToString("\n") {
-                "${it.otherUserName}: ${it.compatibilityScore}%"
+                "${it.userId}: ${it.matchScore}%"
             }
         }
+
 
         viewModel.loadMatches()
     }

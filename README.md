@@ -59,7 +59,7 @@ Requirements:
 💚 Project Status :
 
  Stage: Pre-Alpha 
-  - Working on the Authentication, Profies, Value Matching, Navigation
+  - Working on the Authentication, Profiles, Value Matching, Navigation
  
  Next Steps:
   - Chat messaging

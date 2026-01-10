@@ -4,19 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.valuematch.R
 import com.example.valuematch.databinding.FragmentLoginBinding
-import com.example.valuematch.viewmodel.AuthViewModel
+import com.example.valuematch.repository.AuthRepository
 
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private val authViewModel: AuthViewModel by viewModels()
+
+    private val authRepo = AuthRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,22 +27,26 @@ class LoginFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         binding.loginBtn.setOnClickListener {
             val email = binding.emailInput.text.toString()
             val password = binding.passwordInput.text.toString()
 
-            authViewModel.login(email, password) { success, error ->
-                if (success)
-                    findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-                else
-                    Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
+            authRepo.login(email, password) { success, error ->
+                if (success) {
+                    findNavController().navigate(
+                        R.id.action_loginFragment_to_homeFragment
+                    )
+                } else {
+                    binding.statusText.text = error
+                }
             }
         }
 
         binding.goToSignupBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_signupFragment)
+            findNavController().navigate(
+                R.id.action_loginFragment_to_signupFragment
+            )
         }
     }
 

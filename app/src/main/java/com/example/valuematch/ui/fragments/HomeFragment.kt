@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.valuematch.R
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.valuematch.R
 import com.example.valuematch.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -24,20 +24,12 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // Button: Go to Match screen
-        binding.goToMatchesBtn.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_homeFragment_to_matchFragment
-            )
+        binding.matchesBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_matchFragment)
         }
 
-        // Button: Go to Profile screen
-        binding.goToProfileBtn.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_homeFragment_to_profileFragment
-            )
+        binding.profileBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }
     }
 
