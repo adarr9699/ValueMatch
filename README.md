@@ -3,7 +3,7 @@
 💚Introduction:
 
 Value Match is a dating app that is designed to connect people based their core values, interests,and personal traits other than appearance alone 
-Value Match is was made to promotes meaningful connections, improves relationships compatibility, and help people fine partnesers who share the same personal values.
+Value Match is was made to promotes meaningful connections, improves relationships compatibility, and help people fine a partner who share the same personal values.
 
 💚 MVP Features:
 
@@ -60,7 +60,16 @@ Requirements:
 
  Stage: Pre-Alpha 
   - Working on the Authentication, Profiles, Value Matching, Navigation
- 
+
+💚 Bata :
+ - App layout
+ - Navigation
+ - Authentication 
+ - User Profile
+ - Match Logic
+ - Match Screen
+
+
  Next Steps:
   - Chat messaging
   - Profile Photos

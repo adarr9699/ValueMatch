@@ -1,9 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
-
-    // Firebase plugin
     id("com.google.gms.google-services")
 }
 
@@ -13,12 +10,10 @@ android {
 
     defaultConfig {
         applicationId = "com.example.valuematch"
-        minSdk = 34
-        targetSdk = 36
+        minSdk = 26
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -44,7 +39,6 @@ android {
 
     buildFeatures {
         viewBinding = true
-
     }
 }
 
@@ -56,12 +50,15 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
 
+
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.0")
@@ -80,6 +77,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

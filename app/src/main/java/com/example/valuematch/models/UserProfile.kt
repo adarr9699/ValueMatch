@@ -1,9 +1,9 @@
 package com.example.valuematch.models
 
-import com.google.protobuf.Value
-
 data class UserProfile(
-    val userId: String = "",
-    val name: String = "",
-    val value: List<String> = emptyList(),
+    val uid: String = "",
+    val email: String = "",
+    val values: List<String> = emptyList(),
+    val age: Int = 0,
+    val bio: String = ""
 )

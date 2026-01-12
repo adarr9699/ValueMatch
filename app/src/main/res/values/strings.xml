@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ValueMatch</string>
     <string name="email_hint">Email</string>
@@ -13,5 +12,20 @@
     <string name="matches_button">Find Matches</string>
     <string name="logout">Log Out</string>
     <string name="matches_title">Best Matches</string>
+    <string name="liked">Like</string>
+    <string name="passed">Pass</string>
     <string name="no_matches">No matches yet</string>
+    <string name="name">Name</string>
+    <string name="age">Age</string>
+    <string name="about">About</string>
+    <string name="save">Save</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="name_hint">Name</string>
+    <string name="email_profile_hint">Email</string>
+    <string name="select_image">Select Image</string>
+    <string name="save_profile">Save Profile</string>
+    <string name="skip_image_upload">Skip Image Upload</string>
+    <string name="about_hint">About Me</string>
+    <string name="age_hint">Age</string>
 </resources>
+

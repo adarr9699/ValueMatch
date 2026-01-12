@@ -1,7 +1,7 @@
 package com.example.valuematch.models
 
-data class  MatchResult (
+data class MatchResult(
     val userId: String,
     val matchScore: Int,
-    val sharedValue: List<String>
+    val sharedValues: List<String>
 )

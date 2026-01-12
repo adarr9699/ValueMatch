@@ -1,22 +1,17 @@
 package com.example.valuematch.repository
 
-import com.google.firebase.auth.FirebaseAuth
+import com.example.valuematch.models.UserProfile
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MatchRepository {
 
     private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
 
-    fun getMatches(onResult: (List<String>) -> Unit) {
-        val uid = auth.currentUser?.uid ?: return
-
-        db.collection("matches")
-            .document(uid)
+    fun getAllUsers(callback: (List<UserProfile>) -> Unit) {
+        db.collection("users")
             .get()
-            .addOnSuccessListener { doc ->
-                val matches = doc.get("matches") as? List<String> ?: emptyList()
-                onResult(matches)
+            .addOnSuccessListener { snapshot ->
+                callback(snapshot.toObjects(UserProfile::class.java))
             }
     }
 }

@@ -5,14 +5,25 @@ import com.example.valuematch.models.UserProfile
 
 object MatchingUtils {
 
-    fun calculateMatchScore(userA: UserProfile, userB: UserProfile): MatchResult {
-        val shared = userA.values.intersect(userB.values.toSet()).toList()
-        val score = (shared.size * 100) / maxOf(userA.values.size, 1)
+    fun calculateMatch(
+        userA: UserProfile,
+        userB: UserProfile
+    ): MatchResult {
+
+        val sharedValues =
+            userA.values.intersect(userB.values.toSet()).toList()
+
+        val matchScore =
+            if (userA.values.isNotEmpty()) {
+                (sharedValues.size * 100) / userA.values.size
+            } else {
+                0
+            }
 
         return MatchResult(
             userId = userB.uid,
-            matchScore = score,
-            sharedValues = shared
+            matchScore = matchScore,
+            sharedValues = sharedValues
         )
     }
 }

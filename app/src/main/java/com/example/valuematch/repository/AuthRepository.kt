@@ -9,32 +9,24 @@ class AuthRepository {
     fun login(
         email: String,
         password: String,
-        onResult: (Boolean, String?) -> Unit
+        callback: (Boolean, String?) -> Unit
     ) {
         auth.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                onResult(true, null)
-            }
-            .addOnFailureListener {
-                onResult(false, it.message)
-            }
+            .addOnSuccessListener { callback(true, null) }
+            .addOnFailureListener { callback(false, it.message) }
     }
 
     fun signup(
         email: String,
         password: String,
-        onResult: (Boolean, String?) -> Unit
+        callback: (Boolean, String?) -> Unit
     ) {
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                onResult(true, null)
-            }
-            .addOnFailureListener {
-                onResult(false, it.message)
-            }
+            .addOnSuccessListener { callback(true, null) }
+            .addOnFailureListener { callback(false, it.message) }
     }
 
-    fun logout() {
-        auth.signOut()
+    fun currentUserId(): String? {
+        return auth.currentUser?.uid
     }
 }

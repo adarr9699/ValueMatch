@@ -1,21 +1,26 @@
 package com.example.valuematch.repository
 
-import com.google.firebase.auth.FirebaseAuth
+import com.example.valuematch.models.UserProfile
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ProfileRepository {
 
     private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
 
-    fun loadProfile(onResult: (Map<String, Any>?) -> Unit) {
-        val uid = auth.currentUser?.uid ?: return
+    fun saveProfile(profile: UserProfile, callback: (Boolean) -> Unit) {
+        db.collection("users")
+            .document(profile.uid)
+            .set(profile)
+            .addOnSuccessListener { callback(true) }
+            .addOnFailureListener { callback(false) }
+    }
 
-        db.collection("profiles")
-            .document(uid)
+    fun getAllUsers(callback: (List<UserProfile>) -> Unit) {
+        db.collection("users")
             .get()
-            .addOnSuccessListener { doc ->
-                onResult(doc.data)
+            .addOnSuccessListener { snapshot ->
+                callback(snapshot.toObjects(UserProfile::class.java))
             }
     }
 }
+
