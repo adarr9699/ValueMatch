@@ -70,10 +70,7 @@ Requirements:
  - Match Screen
 
 
- Next Steps:
-  - Chat messaging
-  - Profile Photos
-  - Compatibility Engineering (logic)
+
  
    
 
