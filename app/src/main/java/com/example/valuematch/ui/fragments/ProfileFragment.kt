@@ -1,105 +1,93 @@
 package com.example.valuematch.ui.fragments
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.valuematch.databinding.FragmentProfileBinding
 import com.example.valuematch.R
-import java.io.File
-import java.io.FileOutputStream
+import com.example.valuematch.data.models.User
+import com.example.valuematch.databinding.FragmentProfileBinding
+import com.example.valuematch.repository.AuthRepository
+import com.example.valuematch.repository.UserRepository
+import com.example.valuematch.utils.FirebaseUtils
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    private var imageUri: Uri? = null
-
-    private val selectImageLauncher =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            if (uri != null) {
-                imageUri = uri
-                binding.profileImageView.setImageURI(uri)
-            }
-        }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    private val userRepo = UserRepository()
+    private val authRepo = AuthRepository()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentProfileBinding.bind(view)
 
-        loadProfile()
+        val uid = FirebaseUtils.uidOrThrow()
 
-        binding.selectImageButton.setOnClickListener {
-            selectImageLauncher.launch("image/*")
+        userRepo.getUser(uid).addOnSuccessListener { snap ->
+            val u = snap.toObject(User::class.java)
+
+            binding.nameInput.setText(u?.name ?: "")
+            binding.bioInput.setText(u?.bio ?: "")
+            binding.valuesLabel.text =
+                "Values: ${(u?.values ?: emptyList()).joinToString(", ")}"
+
+            setSpinner(binding.genderSpinner, u?.gender)
+            setSpinner(binding.interestedInSpinner, u?.interestedIn)
         }
 
-        binding.skipImageButton.setOnClickListener {
-            imageUri = null
-            saveProfile()
+        binding.editValuesButton.setOnClickListener {
+            findNavController()
+                .navigate(R.id.action_profileFragment_to_valuesFragment)
         }
 
         binding.saveProfileButton.setOnClickListener {
-            saveProfile()
+            val name = binding.nameInput.text.toString().trim()
+            val bio = binding.bioInput.text.toString().trim()
+            val gender = binding.genderSpinner.selectedItem.toString()
+            val interestedIn = binding.interestedInSpinner.selectedItem.toString()
+
+            if (name.isBlank()) {
+                Toast.makeText(requireContext(), "Name required", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            userRepo.getUser(uid).addOnSuccessListener { snap ->
+                val old = snap.toObject(User::class.java) ?: User(userId = uid)
+
+                val updated = old.copy(
+                    name = name,
+                    bio = bio,
+                    gender = gender,
+                    interestedIn = interestedIn
+                )
+
+                userRepo.upsertUser(updated)
+                    .addOnSuccessListener {
+                        Toast.makeText(
+                            requireContext(),
+                            "Profile saved successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+            }
+        }
+
+        binding.logoutButton.setOnClickListener {
+            authRepo.logout()
+            findNavController()
+                .navigate(R.id.action_profileFragment_to_loginFragment)
         }
     }
 
-    private fun saveProfile() {
-        val name = binding.nameEditText.text.toString()
-        val age = binding.ageEditText.text.toString()
-        val about = binding.aboutEditText.text.toString()
-
-        val prefs = requireContext().getSharedPreferences("user_profile", Context.MODE_PRIVATE)
-        val editor = prefs.edit()
-        editor.putString("name", name)
-        editor.putString("age", age)
-        editor.putString("about", about)
-
-        imageUri?.let { _ ->
-            val bitmap = binding.profileImageView.drawable.toBitmap()
-            val file = File(requireContext().filesDir, "profile_image.png")
-            FileOutputStream(file).use { out ->
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-            }
-            editor.putString("profile_image_path", file.absolutePath)
-        }
-
-        editor.apply()
-        Toast.makeText(requireContext(), "Profile saved!", Toast.LENGTH_SHORT).show()
-
-
-        findNavController().navigate(R.id.action_profileFragment_to_homeFragment)
-    }
-
-    private fun loadProfile() {
-        val prefs = requireContext().getSharedPreferences("user_profile", Context.MODE_PRIVATE)
-        binding.nameEditText.setText(prefs.getString("name", ""))
-        binding.ageEditText.setText(prefs.getString("age", ""))
-        binding.aboutEditText.setText(prefs.getString("about", ""))
-
-        val imagePath = prefs.getString("profile_image_path", null)
-        imagePath?.let {
-            val file = File(it)
-            if (file.exists()) {
-                binding.profileImageView.setImageURI(Uri.fromFile(file))
-            }
-        }
+    private fun setSpinner(spinner: android.widget.Spinner, value: String?) {
+        if (value.isNullOrBlank()) return
+        val index = (0 until spinner.count)
+            .firstOrNull { spinner.getItemAtPosition(it) == value }
+            ?: return
+        spinner.setSelection(index)
     }
 
     override fun onDestroyView() {

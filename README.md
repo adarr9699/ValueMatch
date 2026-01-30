@@ -62,12 +62,31 @@ Requirements:
   - Working on the Authentication, Profiles, Value Matching, Navigation
 
 💚 Bata :
- - App layout
- - Navigation
- - Authentication 
- - User Profile
- - Match Logic
- - Match Screen
+App layout
+- Authentication
+- User Profile
+- Match Logic
+- Match screen 
+- Message screen
+
+Navigation
+- Login
+- Signup
+- Home Dashboard
+- Profile Screen
+- Match Screen
+- Messaging Screen
+
+Match Screen
+  - Match Logic
+  - Match screen 
+
+Message Screen
+  - Message screen
+
+
+
+
 
 
 

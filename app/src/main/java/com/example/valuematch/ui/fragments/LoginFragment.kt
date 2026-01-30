@@ -4,18 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.valuematch.R
 import com.example.valuematch.databinding.FragmentLoginBinding
-import com.example.valuematch.repository.AuthRepository
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    private val authRepo = AuthRepository()
+    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,26 +28,33 @@ class LoginFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.loginButton.setOnClickListener {
+            val email = binding.emailInput.text.toString().trim()
+            val password = binding.passwordInput.text.toString().trim()
 
-        binding.loginBtn.setOnClickListener {
-            val email = binding.emailInput.text.toString()
-            val password = binding.passwordInput.text.toString()
-
-            authRepo.login(email, password) { success, error ->
-                if (success) {
-                    findNavController().navigate(
-                        R.id.action_loginFragment_to_homeFragment
-                    )
-                } else {
-                    binding.statusText.text = error
-                }
+            if (email.isBlank() || password.isBlank()) {
+                Toast.makeText(requireContext(), "Email & password required", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+                    findNavController()
+                        .navigate(R.id.action_loginFragment_to_homeFragment)
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        requireContext(),
+                        e.message ?: "Login failed",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
         }
 
-        binding.goToSignupBtn.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_loginFragment_to_signupFragment
-            )
+        binding.goToSignup.setOnClickListener {
+            findNavController()
+                .navigate(R.id.action_loginFragment_to_signupFragment)
         }
     }
 

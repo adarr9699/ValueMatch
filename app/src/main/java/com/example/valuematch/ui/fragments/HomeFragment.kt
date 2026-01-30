@@ -1,62 +1,55 @@
 package com.example.valuematch.ui.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
 import com.example.valuematch.R
 import com.example.valuematch.databinding.FragmentHomeBinding
-import com.example.valuematch.utils.FirebaseUtils.auth
-import com.google.firebase.auth.FirebaseAuth
+import com.example.valuematch.repository.AuthRepository
 
-
-
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    private val authRepo = AuthRepository()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.matchesBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_matchFragment)
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentHomeBinding.bind(view)
+
+        binding.goToSwipe.setOnClickListener {
+            findNavController()
+                .navigate(R.id.action_homeFragment_to_swipeFragment)
         }
 
-        binding.profileBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+        binding.goToMatches.setOnClickListener {
+            findNavController()
+                .navigate(R.id.action_homeFragment_to_matchesFragment)
         }
 
-        binding.logoutBtn.setOnClickListener {
-           findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
+        binding.goToProfile.setOnClickListener {
+            findNavController()
+                .navigate(R.id.action_homeFragment_to_profileFragment)
         }
 
-        fun logoutUser() {
-
-            auth.signOut()
-
-
-            findNavController().navigate(
-                R.id.loginFragment,
-                null,
-                navOptions {
-                    popUpTo(R.id.homeFragment) {
-                        inclusive = true
-                    }
-                }
-            )
+        binding.goToValues.setOnClickListener {
+            findNavController()
+                .navigate(R.id.action_homeFragment_to_valuesFragment)
         }
 
+        binding.goToMessagesButton.setOnClickListener {
+            findNavController()
+                .navigate(R.id.action_homeFragment_to_matchesFragment)
+        }
+
+        binding.logoutButton.setOnClickListener {
+            authRepo.logout()
+
+            findNavController()
+                .navigate(R.id.action_homeFragment_to_loginFragment)
+        }
     }
 
     override fun onDestroyView() {

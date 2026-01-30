@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/cardName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/cardGender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gender"
+        android:textStyle="italic"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/cardBio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bio"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/cardValues"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Values"
+        android:layout_marginTop="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/passButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="PASS" />
+
+        <Button
+            android:id="@+id/likeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="LIKE"
+            android:layout_marginStart="12dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/goToMatches"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GO TO MATCHES"
+        android:layout_marginTop="12dp" />
+
+</LinearLayout>
+

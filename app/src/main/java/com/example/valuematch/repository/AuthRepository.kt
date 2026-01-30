@@ -1,32 +1,19 @@
 package com.example.valuematch.repository
 
-import com.google.firebase.auth.FirebaseAuth
+import com.example.valuematch.utils.FirebaseUtils
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 
 class AuthRepository {
-
-    private val auth = FirebaseAuth.getInstance()
-
-    fun login(
-        email: String,
-        password: String,
-        callback: (Boolean, String?) -> Unit
-    ) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener { callback(true, null) }
-            .addOnFailureListener { callback(false, it.message) }
+    fun signup(email: String, password: String): Task<AuthResult> {
+        return FirebaseUtils.auth.createUserWithEmailAndPassword(email, password)
     }
 
-    fun signup(
-        email: String,
-        password: String,
-        callback: (Boolean, String?) -> Unit
-    ) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener { callback(true, null) }
-            .addOnFailureListener { callback(false, it.message) }
+    fun login(email: String, password: String): Task<AuthResult> {
+        return FirebaseUtils.auth.signInWithEmailAndPassword(email, password)
     }
 
-    fun currentUserId(): String? {
-        return auth.currentUser?.uid
+    fun logout() {
+        FirebaseUtils.auth.signOut()
     }
 }

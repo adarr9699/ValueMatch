@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pick your values"
+            android:textSize="18sp" />
+
+        <!-- Core -->
+        <CheckBox
+            android:id="@+id/valueHonesty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Honesty"
+            android:layout_marginTop="12dp" />
+
+        <CheckBox
+            android:id="@+id/valueFamily"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Family" />
+
+        <CheckBox
+            android:id="@+id/valueFaith"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Faith" />
+
+        <CheckBox
+            android:id="@+id/valueLove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Love" />
+
+
+        <CheckBox
+            android:id="@+id/valueGaming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gaming" />
+
+        <CheckBox
+            android:id="@+id/valuePolitics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Politics" />
+
+        <CheckBox
+            android:id="@+id/valueMusic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Music" />
+
+        <CheckBox
+            android:id="@+id/valueMovies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Movies" />
+
+        <CheckBox
+            android:id="@+id/valueSports"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sports" />
+
+        <CheckBox
+            android:id="@+id/valueReligion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Religion" />
+
+
+        <CheckBox
+            android:id="@+id/valueLeadership"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Leadership" />
+
+        <CheckBox
+            android:id="@+id/valueGrowth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Growth" />
+
+        <CheckBox
+            android:id="@+id/valueCreativity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Creativity" />
+
+        <CheckBox
+            android:id="@+id/valueCareer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Career" />
+
+        <CheckBox
+            android:id="@+id/valueTravel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Travel" />
+
+        <Button
+            android:id="@+id/saveValuesButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Values"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+</ScrollView>

@@ -1,29 +1,13 @@
 package com.example.valuematch.utils
 
-import com.example.valuematch.models.MatchResult
-import com.example.valuematch.models.UserProfile
-
 object MatchingUtils {
+    fun sharedValues(a: List<String>, b: List<String>): List<String> {
+        if (a.isEmpty() || b.isEmpty()) return emptyList()
+        val setB = b.toSet()
+        return a.filter { it in setB }.distinct()
+    }
 
-    fun calculateMatch(
-        userA: UserProfile,
-        userB: UserProfile
-    ): MatchResult {
-
-        val sharedValues =
-            userA.values.intersect(userB.values.toSet()).toList()
-
-        val matchScore =
-            if (userA.values.isNotEmpty()) {
-                (sharedValues.size * 100) / userA.values.size
-            } else {
-                0
-            }
-
-        return MatchResult(
-            userId = userB.uid,
-            matchScore = matchScore,
-            sharedValues = sharedValues
-        )
+    fun chatId(uidA: String, uidB: String): String {
+        return if (uidA < uidB) "${uidA}_$uidB" else "${uidB}_$uidA"
     }
 }

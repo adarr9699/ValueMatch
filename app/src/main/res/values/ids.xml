@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="action_signupFragment_to_homeFragment" type="id" />
+    <item name="action_loginFragment_to_valuesFragment" type="id" />
 </resources>

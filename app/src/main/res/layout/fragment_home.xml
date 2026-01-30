@@ -1,37 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:padding="24dp">
 
     <TextView
-        android:text="Welcome to Value Match"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="ValueMatch Home"
+        android:textSize="20sp"/>
 
     <Button
-        android:id="@+id/profileBtn"
-        android:text="My Profile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/matchesBtn"
-        android:text="Find Matches"
+        android:id="@+id/goToSwipe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Start Swiping"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/goToMatches"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="My Matches"
+        android:layout_marginTop="12dp"/>
+
+    <Button
+        android:id="@+id/goToProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:layout_marginTop="12dp"/>
+
+    <Button
+        android:id="@+id/goToValues"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit Values"
+        android:layout_marginTop="12dp"/>
+
+    <Button
+        android:id="@+id/goToMessagesButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Messages"
         android:layout_marginTop="12dp" />
 
     <Button
-        android:id="@+id/logoutBtn"
-        android:text="Log Out"
+        android:id="@+id/logoutButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp" />
+        android:text="Logout"
+        android:layout_marginTop="12dp"/>
+
 
 </LinearLayout>
