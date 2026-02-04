@@ -1,36 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp">
+    android:fillViewport="true">
 
-    <EditText
-        android:id="@+id/emailInput"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress"/>
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <EditText
-        android:id="@+id/passwordInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:layout_marginTop="12dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Welcome back"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"/>
 
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:layout_marginTop="16dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log in to continue"
+            android:textSize="16sp"
+            android:alpha="0.7"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="18dp"/>
 
-    <TextView
-        android:id="@+id/goToSignup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No account? Sign up"
-        android:layout_marginTop="12dp"/>
-</LinearLayout>
+        <EditText
+            android:id="@+id/emailInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/bg_input"/>
+
+        <EditText
+            android:id="@+id/passwordInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_input"/>
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Login"
+            android:textAllCaps="false"
+            android:layout_marginTop="18dp"
+            android:backgroundTint="@color/rose_gold"
+            android:textColor="@android:color/white"/>
+
+        <TextView
+            android:id="@+id/goToSignup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No account? Sign up"
+            android:textSize="14sp"
+            android:layout_marginTop="14dp"
+            android:textColor="@color/rose_gold"/>
+
+    </LinearLayout>
+</ScrollView>

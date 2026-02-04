@@ -24,7 +24,6 @@ class ValuesFragment : Fragment(R.layout.fragment_values) {
 
         val uid = FirebaseUtils.uidOrThrow()
 
-        // Load existing values
         userRepo.getUser(uid).addOnSuccessListener { snap ->
             val u = snap.toObject(User::class.java)
             val values = u?.values ?: emptyList()

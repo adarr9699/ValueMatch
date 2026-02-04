@@ -10,8 +10,6 @@ class MessageFragment : Fragment(R.layout.fragment_message) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // This fragment is deprecated in this build.
-        // Go to matches (or home) so the app still works.
         findNavController().navigate(R.id.matchesFragment)
     }
 }

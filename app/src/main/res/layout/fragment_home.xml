@@ -12,25 +12,32 @@
         android:textSize="20sp"/>
 
     <Button
+        android:id="@+id/goToProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Profile" />
+
+    <Button
         android:id="@+id/goToSwipe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start Swiping"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:text="Start Swiping" />
 
     <Button
         android:id="@+id/goToMatches"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="My Matches"
-        android:layout_marginTop="12dp"/>
+        android:layout_marginTop="12dp"
+        android:text="My Matches" />
 
     <Button
-        android:id="@+id/goToProfile"
+        android:id="@+id/goToMessagesButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Profile"
-        android:layout_marginTop="12dp"/>
+        android:layout_marginTop="12dp"
+        android:text="Messages" />
 
     <Button
         android:id="@+id/goToValues"
@@ -40,10 +47,10 @@
         android:layout_marginTop="12dp"/>
 
     <Button
-        android:id="@+id/goToMessagesButton"
+        android:id="@+id/goToSettingsButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Messages"
+        android:text="Settings"
         android:layout_marginTop="12dp" />
 
     <Button

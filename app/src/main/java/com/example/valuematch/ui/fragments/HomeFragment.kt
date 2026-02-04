@@ -20,35 +20,32 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         _binding = FragmentHomeBinding.bind(view)
 
         binding.goToSwipe.setOnClickListener {
-            findNavController()
-                .navigate(R.id.action_homeFragment_to_swipeFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_swipeFragment)
         }
 
         binding.goToMatches.setOnClickListener {
-            findNavController()
-                .navigate(R.id.action_homeFragment_to_matchesFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_matchesFragment)
         }
 
         binding.goToProfile.setOnClickListener {
-            findNavController()
-                .navigate(R.id.action_homeFragment_to_profileFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }
 
         binding.goToValues.setOnClickListener {
-            findNavController()
-                .navigate(R.id.action_homeFragment_to_valuesFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_valuesFragment)
         }
 
         binding.goToMessagesButton.setOnClickListener {
-            findNavController()
-                .navigate(R.id.action_homeFragment_to_matchesFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_matchesFragment)
+        }
+
+        binding.goToSettingsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
         }
 
         binding.logoutButton.setOnClickListener {
             authRepo.logout()
-
-            findNavController()
-                .navigate(R.id.action_homeFragment_to_loginFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
         }
     }
 

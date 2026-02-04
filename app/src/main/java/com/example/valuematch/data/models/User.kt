@@ -6,5 +6,6 @@ data class User(
     val bio: String = "",
     val values: List<String> = emptyList(),
     val gender: String = "",
-    val interestedIn: String = ""
+    val location: String = ""
 )
+

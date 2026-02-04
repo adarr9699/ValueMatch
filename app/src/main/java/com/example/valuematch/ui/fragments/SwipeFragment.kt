@@ -41,11 +41,7 @@ class SwipeFragment : Fragment(R.layout.fragment_swipe) {
                 queue.clear()
                 queue.addAll(others)
 
-                if (queue.isNotEmpty()) {
-                    showNext()
-                } else {
-                    showEmpty()
-                }
+                if (queue.isNotEmpty()) showNext() else showEmpty()
             },
             onError = {
                 Toast.makeText(requireContext(), "Failed to load users", Toast.LENGTH_SHORT).show()
@@ -53,58 +49,27 @@ class SwipeFragment : Fragment(R.layout.fragment_swipe) {
         )
 
         binding.likeButton.setOnClickListener {
-            val me = FirebaseUtils.uidOrThrow()
+            val me = myUid
             val other = currentUser?.userId.orEmpty()
 
-            if (other.isBlank()) {
-                Toast.makeText(requireContext(), "No user selected", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            if (other.isBlank()) return@setOnClickListener
+
+            likeRepo.saveLike(me, other).addOnSuccessListener {
+                likeRepo.didLike(other, me).addOnSuccessListener { doc ->
+                    if (doc.exists()) {
+                        matchRepo.createMatch(me, other).addOnSuccessListener {
+                            Toast.makeText(requireContext(), "It's a match! 🎉", Toast.LENGTH_SHORT).show()
+                            val args = Bundle().apply { putString("otherUserId", other) }
+                            findNavController().navigate(
+                                R.id.action_swipeFragment_to_chatFragment,
+                                args
+                            )
+                        }
+                    } else {
+                        showNext()
+                    }
+                }
             }
-
-            likeRepo.saveLike(me, other)
-                .addOnSuccessListener {
-                    likeRepo.didLike(other, me)
-                        .addOnSuccessListener { doc ->
-                            if (doc.exists()) {
-                                matchRepo.createMatch(me, other)
-                                    .addOnSuccessListener {
-                                        Toast.makeText(requireContext(), "It's a match! 🎉", Toast.LENGTH_SHORT).show()
-
-                                        val args = Bundle().apply {
-                                            putString("otherUserId", other)
-                                        }
-                                        findNavController().navigate(
-                                            R.id.action_swipeFragment_to_chatFragment,
-                                            args
-                                        )
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Toast.makeText(
-                                            requireContext(),
-                                            e.message ?: "Match create failed",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                            } else {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Liked! Waiting for them to like back.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                showNext()
-                            }
-                        }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(
-                                requireContext(),
-                                e.message ?: "Failed to check match",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(requireContext(), e.message ?: "Failed to like", Toast.LENGTH_SHORT).show()
-                }
         }
 
         binding.passButton.setOnClickListener { showNext() }
@@ -126,8 +91,34 @@ class SwipeFragment : Fragment(R.layout.fragment_swipe) {
         binding.cardName.text = user.name.ifBlank { "Unnamed user" }
         binding.cardBio.text = user.bio.ifBlank { "No bio provided" }
         binding.cardValues.text =
-            if (user.values.isNotEmpty()) "Values: ${user.values.joinToString(", ")}"
-            else "Values: none yet"
+            if (user.values.isNotEmpty())
+                "Values: ${user.values.joinToString(", ")}"
+            else
+                "Values: none yet"
+
+        when (user.gender.lowercase()) {
+            "male" -> {
+                binding.cardName.setTextColor(
+                    resources.getColor(R.color.male_blue, null)
+                )
+                binding.likeButton.backgroundTintList =
+                    resources.getColorStateList(R.color.male_blue, null)
+            }
+
+            "female" -> {
+                binding.cardName.setTextColor(
+                    resources.getColor(R.color.female_pink, null)
+                )
+                binding.likeButton.backgroundTintList =
+                    resources.getColorStateList(R.color.female_pink, null)
+            }
+
+            else -> {
+                binding.cardName.setTextColor(
+                    resources.getColor(R.color.neutral_gray, null)
+                )
+            }
+        }
     }
 
     private fun showEmpty() {
@@ -140,7 +131,6 @@ class SwipeFragment : Fragment(R.layout.fragment_swipe) {
     override fun onDestroyView() {
         super.onDestroyView()
         listener?.remove()
-        listener = null
         _binding = null
     }
 }

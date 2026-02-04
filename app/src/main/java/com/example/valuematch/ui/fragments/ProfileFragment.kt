@@ -1,5 +1,6 @@
 package com.example.valuematch.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -20,74 +21,85 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val userRepo = UserRepository()
     private val authRepo = AuthRepository()
 
+    private val prefsName = "valuematch_prefs"
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentProfileBinding.bind(view)
 
         val uid = FirebaseUtils.uidOrThrow()
+        val prefs = requireContext().getSharedPreferences(prefsName, Context.MODE_PRIVATE)
+
 
         userRepo.getUser(uid).addOnSuccessListener { snap ->
             val u = snap.toObject(User::class.java)
 
             binding.nameInput.setText(u?.name ?: "")
             binding.bioInput.setText(u?.bio ?: "")
+            binding.locationInput.setText(u?.location ?: "")
+
+            when ((u?.gender ?: "").lowercase()) {
+                "male" -> binding.genderMale.isChecked = true
+                "female" -> binding.genderFemale.isChecked = true
+            }
+
             binding.valuesLabel.text =
                 "Values: ${(u?.values ?: emptyList()).joinToString(", ")}"
-
-            setSpinner(binding.genderSpinner, u?.gender)
-            setSpinner(binding.interestedInSpinner, u?.interestedIn)
         }
 
         binding.editValuesButton.setOnClickListener {
-            findNavController()
-                .navigate(R.id.action_profileFragment_to_valuesFragment)
+            findNavController().navigate(R.id.action_profileFragment_to_valuesFragment)
         }
 
         binding.saveProfileButton.setOnClickListener {
             val name = binding.nameInput.text.toString().trim()
             val bio = binding.bioInput.text.toString().trim()
-            val gender = binding.genderSpinner.selectedItem.toString()
-            val interestedIn = binding.interestedInSpinner.selectedItem.toString()
+            val location = binding.locationInput.text.toString().trim()
+
+            val gender = when (binding.genderGroup.checkedRadioButtonId) {
+                R.id.genderMale -> "male"
+                R.id.genderFemale -> "female"
+                else -> ""
+            }
 
             if (name.isBlank()) {
                 Toast.makeText(requireContext(), "Name required", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            userRepo.getUser(uid).addOnSuccessListener { snap ->
-                val old = snap.toObject(User::class.java) ?: User(userId = uid)
-
-                val updated = old.copy(
-                    name = name,
-                    bio = bio,
-                    gender = gender,
-                    interestedIn = interestedIn
-                )
-
-                userRepo.upsertUser(updated)
-                    .addOnSuccessListener {
-                        Toast.makeText(
-                            requireContext(),
-                            "Profile saved successfully",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+            if (gender.isBlank()) {
+                Toast.makeText(requireContext(), "Select Male or Female", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            if (location.isBlank()) {
+                Toast.makeText(requireContext(), "Location required", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val updatedUser = User(
+                userId = uid,
+                name = name,
+                bio = bio,
+                gender = gender,
+                location = location
+            )
+
+            userRepo.upsertUser(updatedUser)
+                .addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Profile saved ✅", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_profileFragment_to_homeFragment)
+                }
+                .addOnFailureListener {
+                    Toast.makeText(requireContext(), "Save failed", Toast.LENGTH_SHORT).show()
+                }
         }
 
         binding.logoutButton.setOnClickListener {
             authRepo.logout()
-            findNavController()
-                .navigate(R.id.action_profileFragment_to_loginFragment)
+            findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
         }
-    }
-
-    private fun setSpinner(spinner: android.widget.Spinner, value: String?) {
-        if (value.isNullOrBlank()) return
-        val index = (0 until spinner.count)
-            .firstOrNull { spinner.getItemAtPosition(it) == value }
-            ?: return
-        spinner.setSelection(index)
     }
 
     override fun onDestroyView() {
