@@ -1,105 +1,94 @@
 package com.example.valuematch.ui.fragments
 
-import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.valuematch.R
-import com.example.valuematch.data.models.User
 import com.example.valuematch.databinding.FragmentProfileBinding
-import com.example.valuematch.repository.AuthRepository
-import com.example.valuematch.repository.UserRepository
-import com.example.valuematch.utils.FirebaseUtils
+import com.example.valuematch.utils.uidOrThrow
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.util.UUID
+
+
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    private val userRepo = UserRepository()
-    private val authRepo = AuthRepository()
+    private val db = FirebaseFirestore.getInstance()
+    private val storage = FirebaseStorage.getInstance()
 
-    private val prefsName = "valuematch_prefs"
+    private var pickedUri: Uri? = null
 
+    private val pickImage = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri ->
+        if (uri != null) {
+            pickedUri = uri
+            Glide.with(this).load(uri).circleCrop().into(binding.profilePhoto)
+            uploadAndSavePhoto(uri)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentProfileBinding.bind(view)
 
-        val uid = FirebaseUtils.uidOrThrow()
-        val prefs = requireContext().getSharedPreferences(prefsName, Context.MODE_PRIVATE)
+        loadProfile()
+
+        binding.btnEditProfile.setOnClickListener { pickImage.launch("image/*") }
+        binding.btnEditProfile.setOnClickListener { pickImage.launch("image/*") }
+        binding.btnEditProfile.setOnClickListener { pickImage.launch("image/*") }
+    }
+
+    private fun loadProfile() {
+        val uid = uidOrThrow()
+        db.collection("users").document(uid).get()
+            .addOnSuccessListener { doc ->
+                val name = doc.getString("name").orEmpty().ifBlank { "Lizzy" }
+               // val about = doc.getString("about").orEmpty().ifBlank { "Complete your profile to be seen by more people!" }
+                val photoUrl = doc.getString("photoUrl").orEmpty()
+
+                binding.profileNameAge.text = name
 
 
-        userRepo.getUser(uid).addOnSuccessListener { snap ->
-            val u = snap.toObject(User::class.java)
-
-            binding.nameInput.setText(u?.name ?: "")
-            binding.bioInput.setText(u?.bio ?: "")
-            binding.locationInput.setText(u?.location ?: "")
-
-            when ((u?.gender ?: "").lowercase()) {
-                "male" -> binding.genderMale.isChecked = true
-                "female" -> binding.genderFemale.isChecked = true
-            }
-
-            binding.valuesLabel.text =
-                "Values: ${(u?.values ?: emptyList()).joinToString(", ")}"
-        }
-
-        binding.editValuesButton.setOnClickListener {
-            findNavController().navigate(R.id.action_profileFragment_to_valuesFragment)
-        }
-
-        binding.saveProfileButton.setOnClickListener {
-            val name = binding.nameInput.text.toString().trim()
-            val bio = binding.bioInput.text.toString().trim()
-            val location = binding.locationInput.text.toString().trim()
-
-            val gender = when (binding.genderGroup.checkedRadioButtonId) {
-                R.id.genderMale -> "male"
-                R.id.genderFemale -> "female"
-                else -> ""
-            }
-
-            if (name.isBlank()) {
-                Toast.makeText(requireContext(), "Name required", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (gender.isBlank()) {
-                Toast.makeText(requireContext(), "Select Male or Female", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (location.isBlank()) {
-                Toast.makeText(requireContext(), "Location required", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val updatedUser = User(
-                userId = uid,
-                name = name,
-                bio = bio,
-                gender = gender,
-                location = location
-            )
-
-            userRepo.upsertUser(updatedUser)
-                .addOnSuccessListener {
-                    Toast.makeText(requireContext(), "Profile saved ✅", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_profileFragment_to_homeFragment)
+                if (photoUrl.isNotBlank()) {
+                    Glide.with(this).load(photoUrl).circleCrop().into(binding.profilePhoto)
+                } else {
+                    binding.profilePhoto.setImageResource(android.R.drawable.sym_def_app_icon)
                 }
-                .addOnFailureListener {
-                    Toast.makeText(requireContext(), "Save failed", Toast.LENGTH_SHORT).show()
-                }
-        }
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Failed to load profile", Toast.LENGTH_SHORT).show()
+            }
+    }
 
-        binding.logoutButton.setOnClickListener {
-            authRepo.logout()
-            findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
-        }
+    private fun uploadAndSavePhoto(uri: Uri) {
+        val uid = uidOrThrow()
+        val ref = storage.reference.child("profilePhotos/$uid/${UUID.randomUUID()}.jpg")
+
+        ref.putFile(uri)
+            .addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener { download ->
+                    db.collection("users").document(uid)
+                        .set(mapOf("photoUrl" to download.toString()), com.google.firebase.firestore.SetOptions.merge())
+                        .addOnSuccessListener {
+                            Toast.makeText(requireContext(), "Photo saved", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(requireContext(), "Failed saving photo", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Upload failed", Toast.LENGTH_SHORT).show()
+            }
     }
 
     override fun onDestroyView() {

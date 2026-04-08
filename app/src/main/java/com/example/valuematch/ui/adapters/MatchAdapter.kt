@@ -3,35 +3,54 @@ package com.example.valuematch.ui.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.valuematch.data.models.MatchResult
-import com.example.valuematch.databinding.ItemMatchBinding
+import coil.load
+import com.example.valuematch.data.models.MatchItem
+import com.example.valuematch.databinding.ItemMatchRowBinding
 
 class MatchAdapter(
-    private val onClick: (MatchResult) -> Unit
+    private val onClick: (MatchItem) -> Unit
 ) : RecyclerView.Adapter<MatchAdapter.VH>() {
 
-    private val items = mutableListOf<MatchResult>()
+    private val items = mutableListOf<MatchItem>()
 
-    fun submit(list: List<MatchResult>) {
+    fun submit(list: List<MatchItem>) {
         items.clear()
         items.addAll(list)
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val binding = ItemMatchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return VH(binding)
+        val b = ItemMatchRowBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return VH(b, onClick)
     }
 
-    override fun onBindViewHolder(holder: VH, position: Int) = holder.bind(items[position])
+    override fun getItemCount() = items.size
 
-    override fun getItemCount(): Int = items.size
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        holder.bind(items[position])
+    }
 
-    inner class VH(private val binding: ItemMatchBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: MatchResult) {
-            binding.matchName.text = item.otherName.ifBlank { item.otherUserId }
-            binding.matchSharedValues.text = "Shared: ${item.sharedValues.joinToString(", ")}"
-            binding.root.setOnClickListener { onClick(item) }
+    class VH(
+        private val b: ItemMatchRowBinding,
+        private val onClick: (MatchItem) -> Unit
+    ) : RecyclerView.ViewHolder(b.root) {
+
+        fun bind(item: MatchItem) {
+            b.matchName.text = item.otherName
+
+            if (item.otherPhotoUrl.isNotBlank()) {
+                b.matchImage.load(item.otherPhotoUrl)
+            } else {
+                b.matchImage.setImageResource(
+                    com.example.valuematch.R.drawable.ic_profile
+                )
+            }
+
+            b.root.setOnClickListener { onClick(item) }
         }
     }
 }

@@ -1,42 +1,88 @@
 package com.example.valuematch.repository
 
-import com.example.valuematch.data.models.Message
-import com.example.valuematch.utils.FirebaseUtils
-import com.example.valuematch.utils.MatchingUtils
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.Query
+import com.example.valuematch.data.models.ChatMessage
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class MessageRepository {
 
-    fun listenMessages(otherUid: String, onUpdate: (List<Message>) -> Unit) {
-        val me = FirebaseUtils.uidOrThrow()
-        val chatId = MatchingUtils.chatId(me, otherUid)
+    private val db = FirebaseFirestore.getInstance()
 
-        FirebaseUtils.db.collection("chats")
-            .document(chatId)
+    private val uid: String
+        get() = FirebaseAuth.getInstance().currentUser?.uid
+            ?: throw IllegalStateException("Not logged in")
+
+    private fun chatId(a: String, b: String): String =
+        listOf(a, b).sorted().joinToString("_")
+
+    fun listenMessages(
+        otherUserId: String,
+        onUpdate: (List<ChatMessage>) -> Unit
+    ): ListenerRegistration {
+
+        val id = chatId(uid, otherUserId)
+
+        return db.collection("chats")
+            .document(id)
             .collection("messages")
-            .orderBy("timestamp", Query.Direction.ASCENDING)
+            .orderBy("createdAt")
             .addSnapshotListener { snap, _ ->
-                val list = snap?.documents?.mapNotNull { it.toObject(Message::class.java) } ?: emptyList()
-                onUpdate(list)
+                if (snap == null) {
+                    onUpdate(emptyList())
+                    return@addSnapshotListener
+                }
+
+                val messages = snap.documents.mapNotNull { doc ->
+                    doc.toObject(ChatMessage::class.java)
+                }
+
+                onUpdate(messages)
             }
     }
 
-    fun sendMessage(toUserId: String, text: String): Task<Void> {
-        val me = FirebaseUtils.uidOrThrow()
-        val chatId = MatchingUtils.chatId(me, toUserId)
-        val doc = FirebaseUtils.db.collection("chats")
-            .document(chatId)
-            .collection("messages")
-            .document()
+    fun sendMessage(otherUserId: String, text: String) {
+        val id = chatId(uid, otherUserId)
 
-        val msg = Message(
-            id = doc.id,
-            fromUserId = me,
-            toUserId = toUserId,
-            text = text,
-            timestamp = System.currentTimeMillis()
-        )
-        return doc.set(msg)
+        db.collection("chats")
+            .document(id)
+            .collection("messages")
+            .add(
+                mapOf(
+                    "from" to uid,
+                    "to" to otherUserId,
+                    "text" to text,
+                    "createdAt" to FieldValue.serverTimestamp()
+                )
+            )
+    }
+
+    fun blockUser(otherUserId: String) {
+        val me = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        db.collection("blocks")
+            .document("${me}_$otherUserId")
+            .set(
+                mapOf(
+                    "from" to me,
+                    "to" to otherUserId,
+                    "createdAt" to FieldValue.serverTimestamp()
+                )
+            )
+    }
+
+    fun reportUser(otherUserId: String, reason: String) {
+        val me = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        db.collection("reports")
+            .add(
+                mapOf(
+                    "from" to me,
+                    "to" to otherUserId,
+                    "reason" to reason,
+                    "createdAt" to FieldValue.serverTimestamp()
+                )
+            )
     }
 }

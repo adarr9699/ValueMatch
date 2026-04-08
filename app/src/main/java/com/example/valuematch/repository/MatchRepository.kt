@@ -1,67 +1,43 @@
 package com.example.valuematch.repository
 
-import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.SetOptions
-
-data class MatchItem(
-    val matchId: String = "",
-    val userA: String = "",
-    val userB: String = "",
-    val participants: List<String> = emptyList(),
-    val createdAt: Long = 0L
-) {
-    fun otherUserId(myUid: String): String {
-        return if (userA == myUid) userB else userA
-    }
-}
 
 class MatchRepository {
 
     private val db = FirebaseFirestore.getInstance()
-    private val matchesCol = db.collection("matches")
 
-    private fun matchId(a: String, b: String): String =
-        if (a < b) "${a}_${b}" else "${b}_${a}"
+    private val uid: String
+        get() = FirebaseAuth.getInstance().currentUser?.uid
+            ?: throw IllegalStateException("Not logged in")
 
-    fun createMatch(a: String, b: String): Task<Void> {
-        val id = matchId(a, b)
-        val userA = if (a < b) a else b
-        val userB = if (a < b) b else a
-
-        val data = mapOf(
-            "matchId" to id,
-            "userA" to userA,
-            "userB" to userB,
-            "participants" to listOf(userA, userB),
-            "createdAt" to System.currentTimeMillis()
-        )
-
-        return matchesCol.document(id).set(data, SetOptions.merge())
-    }
-
-    fun listenMatchesForCurrentUser(
-        myUid: String,
-        onUpdate: (List<MatchItem>) -> Unit,
-        onError: (Exception) -> Unit = {}
+    fun listenOtherUserIdsForMatches(
+        onUpdate: (List<String>) -> Unit,
+        onError: (Exception) -> Unit,
+        myUid: String
     ): ListenerRegistration {
-        return matchesCol
-            .whereArrayContains("participants", myUid)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .addSnapshotListener { snap, err ->
-                if (err != null) {
-                    onError(err)
+
+        return db.collection("matches")
+            .whereArrayContains("users", uid)
+            .addSnapshotListener { snap, error ->
+
+                if (error != null) {
+                    onError(error)
                     return@addSnapshotListener
                 }
 
-                val list = snap?.documents?.mapNotNull { doc ->
-                    val m = doc.toObject(MatchItem::class.java)
-                    m?.copy(matchId = doc.id)
-                } ?: emptyList()
+                if (snap == null) {
+                    onUpdate(emptyList())
+                    return@addSnapshotListener
+                }
 
-                onUpdate(list)
+                val otherIds = snap.documents.mapNotNull { doc ->
+                    val users = doc.get("users") as? List<*>
+                    users?.filterIsInstance<String>()?.firstOrNull { it != uid }
+                }
+
+                onUpdate(otherIds)
             }
     }
 }

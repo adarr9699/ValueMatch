@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home_graph"
+    app:startDestination="@id/swipeFragment">
+
+    <fragment
+        android:id="@+id/swipeFragment"
+        android:name="com.example.valuematch.ui.fragments.SwipeFragment"
+        android:label="Swipe" />
+
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="com.example.valuematch.ui.fragments.ExploreFragment"
+        android:label="Explore" />
+
+    <fragment
+        android:id="@+id/matchesFragment"
+        android:name="com.example.valuematch.ui.fragments.MatchesFragment"
+        android:label="Likes" />
+
+    <fragment
+        android:id="@+id/myMatchesFragment"
+        android:name="com.example.valuematch.ui.fragments.MyMatchesFragment"
+        android:label="Chat" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.valuematch.ui.fragments.ProfileFragment"
+        android:label="Profile" />
+
+</navigation>

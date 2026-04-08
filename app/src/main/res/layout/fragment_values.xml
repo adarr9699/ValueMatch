@@ -15,7 +15,6 @@
             android:text="Pick your values"
             android:textSize="18sp" />
 
-        <!-- Core -->
         <CheckBox
             android:id="@+id/valueHonesty"
             android:layout_width="wrap_content"

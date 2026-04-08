@@ -4,20 +4,23 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.example.valuematch.R
 import com.example.valuematch.data.models.User
 import com.example.valuematch.databinding.FragmentSignupBinding
-import com.example.valuematch.repository.AuthRepository
 import com.example.valuematch.repository.UserRepository
-import com.example.valuematch.utils.FirebaseUtils
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class SignupFragment : Fragment(R.layout.fragment_signup) {
 
     private var _binding: FragmentSignupBinding? = null
     private val binding get() = _binding!!
 
-    private val authRepo = AuthRepository()
+    private val auth = FirebaseAuth.getInstance()
     private val userRepo = UserRepository()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -26,49 +29,42 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
 
         binding.signupButton.setOnClickListener {
             val email = binding.emailInput.text.toString().trim()
-            val pass = binding.passwordInput.text.toString().trim()
-            val name = binding.nameInput.text.toString().trim()
+            val password = binding.passwordInput.text.toString().trim()
 
-            if (email.isBlank() || pass.isBlank() || name.isBlank()) {
-                Toast.makeText(requireContext(), "Fill all fields", Toast.LENGTH_SHORT).show()
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(requireContext(), "Enter email + password", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            authRepo.signup(email, pass)
-                .addOnSuccessListener {
-                    val uid = FirebaseUtils.uidOrThrow()
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    auth.createUserWithEmailAndPassword(email, password).await()
+                    val uid = auth.currentUser?.uid ?: throw IllegalStateException("No user id")
 
-                    val user = User(
-                        userId = uid,
-                        name = name,
-                        bio = "",
-                        values = emptyList()
-                    )
+                    userRepo.upsertUser(
+                        User(
+                            userId = uid,
+                            name = "",
+                            age = 0,
+                            about = "",
+                            photoUrl = "",
+                            values = emptyList()
+                        )
+                    ).await()
 
-                    userRepo.upsertUser(user)
-                        .addOnSuccessListener {
-                            findNavController()
-                                .navigate(R.id.action_signupFragment_to_valuesFragment)
-                        }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(
-                                requireContext(),
-                                e.message ?: "Failed to save profile",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                }
-                .addOnFailureListener { e ->
+                    val opts = navOptions {
+                        popUpTo(R.id.landingFragment) { inclusive = true }
+                    }
+                    findNavController().navigate(R.id.homeFragment, null, opts)
+
+                } catch (e: Exception) {
                     Toast.makeText(
                         requireContext(),
-                        e.message ?: "Signup failed",
+                        "Signup failed: ${e.message}",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-        }
-
-        binding.goToLogin.setOnClickListener {
-            findNavController().navigateUp()
+            }
         }
     }
 
@@ -77,4 +73,3 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
         _binding = null
     }
 }
-

@@ -2,4 +2,7 @@
 <resources>
     <item name="action_signupFragment_to_homeFragment" type="id" />
     <item name="action_loginFragment_to_valuesFragment" type="id" />
+    <item name="previewPhotoBtn" type="id" />
+    <item name="profileImage" type="id" />
+    <item name="chatFragment" type="id" />
 </resources>
